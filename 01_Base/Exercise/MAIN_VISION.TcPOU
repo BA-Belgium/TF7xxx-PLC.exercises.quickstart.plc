@@ -1,0 +1,104 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.3">
+  <POU Name="MAIN_VISION" Id="{2e9a7e0b-10d4-4db8-95d8-1d98fa199776}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM MAIN_VISION
+VAR
+
+	eControlState				: ETcVnCameraState;
+//	fbControl					: FB_VN_FileSourceControl;		// File Source Control
+	fbControl					: FB_VN_GevCameraControl;		// GigE Vision Camera Control
+//	fbControl					: FB_VN_SimpleCameraControl;	// File Source OR Camera Control 
+
+	hr							: HRESULT;						// Result Handle
+	
+	ipImage						: ITcVnImage;					// Original Image 
+	ipImageDisp					: ITcVnDisplayableImage;		// ADS ImageWatch image
+	ipImageWork					: ITcVnImage;					// Image to work/debug with
+	ipImageWorkDisp				: ITcVnDisplayableImage;		// Debug with ADS ImageWatch
+	ipImageResult				: ITcVnImage;					// Result image to add drawings to
+	ipImageResultDisp			: ITcVnDisplayableImage;		// Displayable result image
+	
+	// colors
+	aColorRed					: TcVnVector4_LREAL := [255, 0, 0];
+	aColorGreen					: TcVnVector4_LREAL := [0, 255, 0];
+	aColorBlue					: TcVnVector4_LREAL := [0, 0, 255];
+	aColorBlack					: TcVnVector4_LREAL := [0, 0, 0];
+	aColorWhite					: TcVnVector4_LREAL := [255, 255, 255];
+	aColorYellow				: TcVnVector4_LREAL := [255, 255, 0];
+	
+	
+	// Watchdog
+	hrWD 						: HRESULT;
+	tWDStop						: DINT := 38_000;	(* Stop time in us *)
+	tRest 						: DINT;
+	nFunctionsMonitored			: ULINT;
+	nFractionProcessed 			: UDINT;
+	tDuration 					: DINT;
+	
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[eControlState := fbControl.GetState();
+
+CASE eControlState OF
+
+	TCVN_CS_INITIAL, 			(* The camera controller is in the initial state and ready to establish the connection to the camera. *)
+	TCVN_CS_OPENING, 			(* The camera controller is establishing the connection to the camera. *)
+	TCVN_CS_OPENED, 			(* The connection to the camera has been established and the camera controller is ready to start the image acquisition. *)
+	TCVN_CS_STARTACQUISITION: 	(* The camera controller is starting the image acquisition. *)
+	
+		// start acquisition
+		hr := fbControl.StartAcquisition();
+	
+
+	TCVN_CS_ACQUIRING: 			(* The camera is sending images (either streaming or manually triggered, depending on the configuration). *)
+	
+		// get current image
+		hr := fbControl.GetCurrentImage(ipImage);
+		
+		IF SUCCEEDED(hr) AND ipImage <> 0 THEN
+			// Copy the Image into a Work-Image	
+			hr :=  F_VN_CopyImage(ipSrcImage:= ipImage, ipDestImage:= ipImageWork, hrPrev:= hr);
+			// Transform the Image into a Displayable Image which can be shown in the ADS ImageWatch (ipImage is not available anymore after transform)
+			hr := F_VN_TransformIntoDisplayableImage(ipImage, ipImageDisp, S_OK);
+			// debug ==> Copy work Image to a displayable Work-Image (ipImageWork is still available after copy)
+			hr := F_VN_CopyIntoDisplayableImage(ipSrcImage:= ipImageWork, ipDestImage:= ipImageWorkDisp, hrPrev:= hr);
+			// Create the color Result Image to draw contours, texts, points etc on the result image
+			// -- adjust the eTransform parameter to your needs
+			// -- if ipImageWork is already a color image (3 channels) then use F_VN_CopyImage() instead
+			hr := F_VN_ConvertColorSpace(ipSrcImage:= ipImageWork, ipDestImage:= ipImageResult, eTransform:= TCVN_CST_BAYER_BG_TO_RGB, hrPrev:= hr);
+	
+			
+			// *********************
+			// Add Vision Algorithms
+			// *********************
+
+			
+			
+			
+			
+
+			// Transform the Result Image into a Displayable image which can be shown in the ADS ImageWatch (ipImageResult is not available anymore after transform)
+			hr := F_VN_TransformIntoDisplayableImage(ipImageResult, ipImageResultDisp, S_OK);
+		
+		END_IF
+		
+		
+TCVN_CS_ERROR: 				(* The camera controller is in an error state (e.g. the connection to the camera was lost). *)
+	
+		// reset the camera FB
+		fbControl.Reset();
+END_CASE]]></ST>
+    </Implementation>
+    <LineIds Name="MAIN_VISION">
+      <LineId Id="39" Count="15" />
+      <LineId Id="5" Count="0" />
+      <LineId Id="55" Count="2" />
+      <LineId Id="66" Count="1" />
+      <LineId Id="58" Count="0" />
+      <LineId Id="64" Count="1" />
+      <LineId Id="60" Count="3" />
+      <LineId Id="59" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>
