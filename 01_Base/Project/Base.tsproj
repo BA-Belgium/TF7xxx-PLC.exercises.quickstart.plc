@@ -1768,17 +1768,17 @@
 	</ImageDatas>
 	<Project ProjectGUID="{1B0C179B-E579-4E7F-98ED-A2C30E5FD459}" Target64Bit="true" ShowHideConfigurations="#x2c7">
 		<System>
-			<Settings MaxCpus="2" NonWinCpus="1" RouterMemory="1073741824" PCoreAffinity="1048065" ECoreAffinity="3146238">
-				<Cpu CpuId="1"/>
+			<Settings MaxCpus="4" NonWinCpus="1" RouterMemory="536870912" PCoreAffinity="1048065" ECoreAffinity="3146238">
+				<Cpu CpuId="3"/>
 			</Settings>
 			<Tasks>
-				<Task Id="2" Priority="5" CycleTime="100000" AmsPort="350" AdtTasks="true">
+				<Task Id="2" Priority="5" CycleTime="100000" AmsPort="350" Affinity="#x00000008" AdtTasks="true">
 					<Name>VnTask ImgAcq (FileSource1)</Name>
 				</Task>
 				<Task Id="4" Priority="20" CycleTime="100000" AmsPort="351" AdtTasks="true">
 					<Name>PlcTask</Name>
 				</Task>
-				<Task Id="5" Priority="1" CycleTime="100000" AmsPort="352" Affinity="#x00000002" AdtTasks="true">
+				<Task Id="5" Priority="1" CycleTime="100000" AmsPort="352" Affinity="#x00000008" AdtTasks="true">
 					<Name>VisionTask</Name>
 				</Task>
 			</Tasks>

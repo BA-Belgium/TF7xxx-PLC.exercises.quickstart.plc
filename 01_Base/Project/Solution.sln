@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # TcXaeShell Solution File, Format Version 11.00
 VisualStudioVersion = 17.7.34302.85
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{B1E792BE-AA5F-4E3C-8C82-674BF9C0715B}") = "Solution", "Solution.tsproj", "{1B0C179B-E579-4E7F-98ED-A2C30E5FD459}"
+Project("{B1E792BE-AA5F-4E3C-8C82-674BF9C0715B}") = "Base", "Base.tsproj", "{1B0C179B-E579-4E7F-98ED-A2C30E5FD459}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
