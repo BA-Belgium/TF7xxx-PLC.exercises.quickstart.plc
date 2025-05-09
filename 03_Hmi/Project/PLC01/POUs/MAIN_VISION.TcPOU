@@ -1,0 +1,176 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <POU Name="MAIN_VISION" Id="{2e9a7e0b-10d4-4db8-95d8-1d98fa199776}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM MAIN_VISION
+VAR
+
+	eControlState				: ETcVnCameraState;
+	fbControl					: FB_VN_FileSourceControl;		// File Source Control
+//	fbControl					: FB_VN_GevCameraControl;		// GigE Vision Camera Control
+//	fbControl					: FB_VN_SimpleCameraControl;	// File Source OR Camera Control 
+
+	hr							: HRESULT;						// Result Handle
+	
+	ipImage						: ITcVnImage;					// Original Image 
+	ipImageDisp					: ITcVnDisplayableImage;		// ADS ImageWatch image
+	ipImageWork					: ITcVnImage;					// Image to work/debug with
+	ipImageWorkDisp				: ITcVnDisplayableImage;		// Debug with ADS ImageWatch
+	ipImageResult				: ITcVnImage;					// Result image to add drawings to
+	ipImageResultDisp			: ITcVnDisplayableImage;		// Displayable result image
+	
+	// colors
+	aColorRed					: TcVnVector4_LREAL := [255, 0, 0];
+	aColorGreen					: TcVnVector4_LREAL := [0, 255, 0];
+	aColorBlue					: TcVnVector4_LREAL := [0, 0, 255];
+	aColorBlack					: TcVnVector4_LREAL := [0, 0, 0];
+	aColorWhite					: TcVnVector4_LREAL := [255, 255, 255];
+	aColorYellow				: TcVnVector4_LREAL := [255, 255, 0];
+	
+	
+	// Watchdog
+	hrWD 						: HRESULT;
+	tWDStop						: DINT := 38_000;	(* Stop time in us *)
+	tRest 						: DINT;
+	nFunctionsMonitored			: ULINT;
+	nFractionProcessed 			: UDINT;
+	tDuration 					: DINT;
+	
+	// working variables
+	aLowerBounds			: TcVnVector4_LREAL := [25,25,80,0]; // R,G,B,A 
+	aUpperBounds			: TcVnVector4_LREAL := [100,100,160]; // (transparency A not used in this moment)
+	ipContourList			: ITcVnContainer;
+	ipIterator				: ITcVnForwardIterator;
+	ipSingleContour			: ITcVnContainer;
+	fArea					: LREAL;
+	fCenterOfMass			: TcVnPoint2_LREAL;
+	stRectangle				: TcVnRotatedRectangle;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[eControlState := fbControl.GetState();
+
+CASE eControlState OF
+
+	TCVN_CS_INITIAL, 			(* The camera controller is in the initial state and ready to establish the connection to the camera. *)
+	TCVN_CS_OPENING, 			(* The camera controller is establishing the connection to the camera. *)
+	TCVN_CS_OPENED, 			(* The connection to the camera has been established and the camera controller is ready to start the image acquisition. *)
+	TCVN_CS_STARTACQUISITION: 	(* The camera controller is starting the image acquisition. *)
+	
+		// start acquisition
+		hr := fbControl.StartAcquisition();
+	
+
+	TCVN_CS_ACQUIRING: 			(* The camera is sending images (either streaming or manually triggered, depending on the configuration). *)
+	
+		// get current image
+		hr := fbControl.GetCurrentImage(ipImage);
+		
+		IF SUCCEEDED(hr) AND ipImage <> 0 THEN
+			// Copy the Image into a Work-Image	
+			hr :=  F_VN_CopyImage(ipSrcImage:= ipImage, ipDestImage:= ipImageWork, hrPrev:= hr);
+			// Transform the Image into a Displayable Image which can be shown in the ADS ImageWatch (ipImage is not available anymore after transform)
+			hr := F_VN_TransformIntoDisplayableImage(ipImage, ipImageDisp, S_OK);
+			// debug ==> Copy work Image to a displayable Work-Image (ipImageWork is still available after copy)
+			hr := F_VN_CopyIntoDisplayableImage(ipSrcImage:= ipImageWork, ipDestImage:= ipImageWorkDisp, hrPrev:= hr);
+			// Create the color Result Image to draw contours, texts, points etc on the result image
+			// -- adjust the eTransform parameter to your needs
+			// -- if ipImageWork is already a color image (3 channels) then use F_VN_CopyImage() instead
+			//hr := F_VN_ConvertColorSpace(ipSrcImage:= ipImageWork, ipDestImage:= ipImageResult, eTransform:= TCVN_CST_BAYER_BG_TO_RGB, hrPrev:= hr);
+			hr := F_VN_CopyImage(ipSrcImage:= ipImageWork, ipDestImage:= ipImageResult, hrPrev:= hr);
+			
+			// *********************
+			// Add Vision Algorithms
+			// *********************
+			hr := F_VN_CheckColorRange(
+					ipSrcImage:= ipImageWork, 
+					ipDestImage:= ipImageWork, 
+					aLowerBounds:= aLowerBounds, 
+					aUpperBounds:= aUpperBounds, 
+					hrPrev:= hr);				
+			// debug ==> Copy work Image to a displayable Work-Image (ipImageWork is still available after copy)
+			hr := F_VN_CopyIntoDisplayableImage(ipSrcImage:= ipImageWork, ipDestImage:= ipImageWorkDisp, hrPrev:= hr);
+			// Find contours
+			hr := F_VN_FindContours(ipSrcImage:= ipImageWork, ipContours:= ipContourList, hrPrev:= hr);
+			// create the iterator to loop through the elements
+			hr := F_VN_GetForwardIterator(ipContainer:= ipContourList, ipIterator:= ipIterator, hrPrev:= hr); 
+			// iterate over the contour list
+			WHILE SUCCEEDED(hr) AND_THEN ipIterator.CheckIfEnd() <> S_OK DO
+				// extract a single contour out of the list
+				hr := F_VN_GetContainer(ipIterator:= ipIterator, ipContainer:= ipSingleContour, hrPrev:= hr);
+				// increment the iterator
+				hr := F_VN_IncrementIterator(ipIterator:= ipIterator, hrPrev:= hr);
+				// filter the contour on area size
+				hr := F_VN_ContourArea(ipContour:= ipSingleContour, fArea:= fArea, hrPrev:= hr);
+				IF fArea > 100_000 THEN	
+					// draw contours
+					hr := F_VN_DrawContours(
+							ipContours:= ipSingleContour, 
+							nContourIndex:= -1, 
+							ipDestImage:= ipImageResult, 
+							aColor:= aColorYellow, 
+							nThickness:= 5, 
+							hrPrev:= hr);	
+					// Find center of mass
+					hr := F_VN_ContourCenterOfMass(ipContour:= ipSingleContour, aCenterOfMass:= fCenterOfMass, hrPrev:= hr);		
+					// draw center of mass
+					hr := F_VN_DrawPointExp(
+							nX:= TO_UDINT(fCenterOfMass[0]), 
+							nY:= TO_UDINT(fCenterOfMass[1]), 
+							ipDestImage:= ipImageResult, 
+							eShape:= ETcVnDrawShape.TCVN_DS_X, 
+							aColor:= aColorYellow, 
+							nSize:= 25, 
+							nThickness:= 5, 
+							eLineType:= ETcVnLineType.TCVN_LT_8_CONNECTED, 
+							hrPrev:= hr);
+					// Find enclosing rectangle
+					hr := F_VN_EnclosingRectangle(
+							ipPointSet:= ipSingleContour, 
+							stRectangle:= stRectangle, 
+							hrPrev:= hr);
+					// Draw enclosing rectangle
+					hr := F_VN_DrawRotatedRectangle(
+							stRectangle:= stRectangle, 
+							ipDestImage:= ipImageResult, 
+							aColor:= aColorWhite, 
+							nThickness:= 5, 
+							hrPrev:= hr);
+					// Put Text
+					hr := F_VN_PutTextExp(
+							sText:= 'Blue', 
+							ipDestImage:= ipImageResult, 
+							nX:= TO_UDINT(fCenterOfMass[0]) - 150, 
+							nY:= TO_UDINT(fCenterOfMass[1]) - 150, 
+							eFontType:= ETcVnFontType.TCVN_FT_HERSHEY_TRIPLEX, 
+							fFontScale:= 3, 
+							aColor:= aColorYellow, 
+							nThickness:= 5, 
+							eLineType:= ETcVnLineType.TCVN_LT_8_CONNECTED, 
+							bBottomLeftOrigin:= FALSE, 
+							hrPrev:= hr);							
+				END_IF
+			END_WHILE
+
+			// Transform the Result Image into a Displayable image which can be shown in the ADS ImageWatch (ipImageResult is not available anymore after transform)
+			hr := F_VN_TransformIntoDisplayableImage(ipImageResult, ipImageResultDisp, S_OK);
+		
+		END_IF
+		
+		
+TCVN_CS_ERROR: 				(* The camera controller is in an error state (e.g. the connection to the camera was lost). *)
+	
+		// reset the camera FB
+		fbControl.Reset();
+END_CASE]]></ST>
+    </Implementation>
+    <LineIds Name="MAIN_VISION">
+      <LineId Id="55" Count="29" />
+      <LineId Id="86" Count="0" />
+      <LineId Id="127" Count="8" />
+      <LineId Id="90" Count="22" />
+      <LineId Id="166" Count="37" />
+      <LineId Id="113" Count="12" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

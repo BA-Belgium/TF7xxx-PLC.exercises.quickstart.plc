@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <Task Name="PlcTask" Id="{6f770544-2135-454f-bf38-65bd09dcfa49}">
+    <!--CycleTime in micro seconds.-->
+    <CycleTime>10000</CycleTime>
+    <Priority>20</Priority>
+    <PouCall>
+      <Name>MAIN</Name>
+    </PouCall>
+    <TaskFBGuid>{d161c435-740f-455a-a459-fea8073b5f35}</TaskFBGuid>
+    <Fb_init>{ffdebc10-e020-4980-b6fc-755d85428063}</Fb_init>
+    <Fb_exit>{9e7bd082-06ca-4430-849b-3ed6c5b98cb0}</Fb_exit>
+    <CycleUpdate>{887b0e72-8b6b-4b6f-a347-ae93373bbf1d}</CycleUpdate>
+    <PostCycleUpdate>{35b0e6d5-9d55-4e1d-975b-d842abda4a35}</PostCycleUpdate>
+  </Task>
+</TcPlcObject>
