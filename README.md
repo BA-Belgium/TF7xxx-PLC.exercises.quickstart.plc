@@ -1,6 +1,7 @@
 # TF7xxx-PLC.exercises.quickstart.plc 
 # About this repository
 This repository contains UNOFFICIAL UNSUPPORTED quickstart sample code for the product TF7xxx|TC3 TwinCAT Vision offered by [Beckhoff Automation](https://www.beckhoff.com). The quickstart sample code is an excerpt of the training course offered by [Beckhoff Automation BV](https://www.beckhoff.be). The sample code is provided as-is under the Zero-Clause BSD license.
+This quick start does not replace any official documentation or training. Please refer to the local Beckhoff subsidiary for the complete training session before even considering yourself a TwinCAT and/or a TwinCAT Vision specialist.
 
 # How to get support
 The code is PROVIDED AS-IS and UNSUPPORTED, therefor we refer to the offical TwinCAT Vision training at Beckhoff Belgium. 
