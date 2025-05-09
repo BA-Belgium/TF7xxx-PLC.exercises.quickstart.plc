@@ -25,15 +25,15 @@
 		</Contexts>
 		<InitSymbols>
 			<InitSymbol>
-				<Name>MAIN_VISION.fbControl.oidITcVnGevImageProvider</Name>
+				<Name>MAIN_VISION.fbControl.oidITcVnFileImageProvider</Name>
 				<Type GUID="{18071995-0000-0000-0000-00000000000F}">OTCID</Type>
-				<Comment><![CDATA[ Internal reference to the corresponding TcVnGevImageProvider TcCOM module ID, which needs to be set via TC init symbol. ]]></Comment>
+				<Comment><![CDATA[ Internal reference to the corresponding TcVnFileImageProvider TcCOM module ID, which needs to be set via TC init symbol. ]]></Comment>
 				<AreaNo>#x00000003</AreaNo>
-				<Data>00000000</Data>
+				<Data>30000101</Data>
 				<Properties>
 					<Property>
 						<Name>TcCategoryOID</Name>
-						<Value>TcVnGevImageProvider</Value>
+						<Value>TcVnFileImageProvider</Value>
 					</Property>
 				</Properties>
 			</InitSymbol>

@@ -1,0 +1,405 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<project xmlns="http://www.plcopen.org/xml/tc6_0200">
+  <fileHeader companyName="Beckhoff Automation GmbH" productName="TwinCAT PLC Control" productVersion="3.5.20.50" creationDateTime="2025-05-08T14:07:11.4213287" />
+  <contentHeader name="PLC01" modificationDateTime="2025-05-08T14:07:11.4273375">
+    <coordinateInfo>
+      <fbd>
+        <scaling x="1" y="1" />
+      </fbd>
+      <ld>
+        <scaling x="1" y="1" />
+      </ld>
+      <sfc>
+        <scaling x="1" y="1" />
+      </sfc>
+    </coordinateInfo>
+    <addData>
+      <data name="http://www.3s-software.com/plcopenxml/projectinformation" handleUnknown="implementation">
+        <ProjectInformation />
+      </data>
+    </addData>
+  </contentHeader>
+  <types>
+    <dataTypes />
+    <pous>
+      <pou name="MAIN_VISION" pouType="program">
+        <interface>
+          <localVars>
+            <variable name="eControlState">
+              <type>
+                <derived name="ETcVnCameraState" />
+              </type>
+            </variable>
+            <variable name="fbControl">
+              <type>
+                <derived name="FB_VN_FileSourceControl" />
+              </type>
+              <documentation>
+                <xhtml xmlns="http://www.w3.org/1999/xhtml"> File Source Control</xhtml>
+              </documentation>
+            </variable>
+            <variable name="hr">
+              <type>
+                <derived name="HRESULT" />
+              </type>
+              <documentation>
+                <xhtml xmlns="http://www.w3.org/1999/xhtml"> Result Handle</xhtml>
+              </documentation>
+            </variable>
+            <variable name="ipImage">
+              <type>
+                <derived name="ITcVnImage" />
+              </type>
+              <documentation>
+                <xhtml xmlns="http://www.w3.org/1999/xhtml"> Original Image </xhtml>
+              </documentation>
+            </variable>
+            <variable name="ipImageDisp">
+              <type>
+                <derived name="ITcVnDisplayableImage" />
+              </type>
+              <documentation>
+                <xhtml xmlns="http://www.w3.org/1999/xhtml"> ADS ImageWatch image</xhtml>
+              </documentation>
+            </variable>
+            <variable name="ipImageWork">
+              <type>
+                <derived name="ITcVnImage" />
+              </type>
+              <documentation>
+                <xhtml xmlns="http://www.w3.org/1999/xhtml"> Image to work/debug with</xhtml>
+              </documentation>
+            </variable>
+            <variable name="ipImageWorkDisp">
+              <type>
+                <derived name="ITcVnDisplayableImage" />
+              </type>
+              <documentation>
+                <xhtml xmlns="http://www.w3.org/1999/xhtml"> Debug with ADS ImageWatch</xhtml>
+              </documentation>
+            </variable>
+            <variable name="ipImageResult">
+              <type>
+                <derived name="ITcVnImage" />
+              </type>
+              <documentation>
+                <xhtml xmlns="http://www.w3.org/1999/xhtml"> Result image to add drawings to</xhtml>
+              </documentation>
+            </variable>
+            <variable name="ipImageResultDisp">
+              <type>
+                <derived name="ITcVnDisplayableImage" />
+              </type>
+              <documentation>
+                <xhtml xmlns="http://www.w3.org/1999/xhtml"> Displayable result image</xhtml>
+              </documentation>
+            </variable>
+            <variable name="aColorRed">
+              <type>
+                <derived name="TcVnVector4_LREAL" />
+              </type>
+              <initialValue>
+                <arrayValue>
+                  <value>
+                    <simpleValue value="255" />
+                  </value>
+                  <value>
+                    <simpleValue value="0" />
+                  </value>
+                  <value>
+                    <simpleValue value="0" />
+                  </value>
+                </arrayValue>
+              </initialValue>
+              <documentation>
+                <xhtml xmlns="http://www.w3.org/1999/xhtml"> colors</xhtml>
+              </documentation>
+            </variable>
+            <variable name="aColorGreen">
+              <type>
+                <derived name="TcVnVector4_LREAL" />
+              </type>
+              <initialValue>
+                <arrayValue>
+                  <value>
+                    <simpleValue value="0" />
+                  </value>
+                  <value>
+                    <simpleValue value="255" />
+                  </value>
+                  <value>
+                    <simpleValue value="0" />
+                  </value>
+                </arrayValue>
+              </initialValue>
+            </variable>
+            <variable name="aColorBlue">
+              <type>
+                <derived name="TcVnVector4_LREAL" />
+              </type>
+              <initialValue>
+                <arrayValue>
+                  <value>
+                    <simpleValue value="0" />
+                  </value>
+                  <value>
+                    <simpleValue value="0" />
+                  </value>
+                  <value>
+                    <simpleValue value="255" />
+                  </value>
+                </arrayValue>
+              </initialValue>
+            </variable>
+            <variable name="aColorBlack">
+              <type>
+                <derived name="TcVnVector4_LREAL" />
+              </type>
+              <initialValue>
+                <arrayValue>
+                  <value>
+                    <simpleValue value="0" />
+                  </value>
+                  <value>
+                    <simpleValue value="0" />
+                  </value>
+                  <value>
+                    <simpleValue value="0" />
+                  </value>
+                </arrayValue>
+              </initialValue>
+            </variable>
+            <variable name="aColorWhite">
+              <type>
+                <derived name="TcVnVector4_LREAL" />
+              </type>
+              <initialValue>
+                <arrayValue>
+                  <value>
+                    <simpleValue value="255" />
+                  </value>
+                  <value>
+                    <simpleValue value="255" />
+                  </value>
+                  <value>
+                    <simpleValue value="255" />
+                  </value>
+                </arrayValue>
+              </initialValue>
+            </variable>
+            <variable name="aColorYellow">
+              <type>
+                <derived name="TcVnVector4_LREAL" />
+              </type>
+              <initialValue>
+                <arrayValue>
+                  <value>
+                    <simpleValue value="255" />
+                  </value>
+                  <value>
+                    <simpleValue value="255" />
+                  </value>
+                  <value>
+                    <simpleValue value="0" />
+                  </value>
+                </arrayValue>
+              </initialValue>
+            </variable>
+            <variable name="hrWD">
+              <type>
+                <derived name="HRESULT" />
+              </type>
+              <documentation>
+                <xhtml xmlns="http://www.w3.org/1999/xhtml"> Watchdog</xhtml>
+              </documentation>
+            </variable>
+            <variable name="tWDStop">
+              <type>
+                <DINT />
+              </type>
+              <initialValue>
+                <simpleValue value="38000" />
+              </initialValue>
+              <documentation>
+                <xhtml xmlns="http://www.w3.org/1999/xhtml"> Stop time in us </xhtml>
+              </documentation>
+            </variable>
+            <variable name="tRest">
+              <type>
+                <DINT />
+              </type>
+            </variable>
+            <variable name="nFunctionsMonitored">
+              <type>
+                <ULINT />
+              </type>
+            </variable>
+            <variable name="nFractionProcessed">
+              <type>
+                <UDINT />
+              </type>
+            </variable>
+            <variable name="tDuration">
+              <type>
+                <DINT />
+              </type>
+            </variable>
+            <addData>
+              <data name="http://www.3s-software.com/plcopenxml/interfaceasplaintext" handleUnknown="implementation">
+                <InterfaceAsPlainText>
+                  <xhtml xmlns="http://www.w3.org/1999/xhtml">PROGRAM MAIN_VISION
+VAR
+
+	eControlState				: ETcVnCameraState;
+	fbControl					: FB_VN_FileSourceControl;		// File Source Control
+//	fbControl					: FB_VN_GevCameraControl;		// GigE Vision Camera Control
+//	fbControl					: FB_VN_SimpleCameraControl;	// File Source OR Camera Control 
+
+	hr							: HRESULT;						// Result Handle
+	
+	ipImage						: ITcVnImage;					// Original Image 
+	ipImageDisp					: ITcVnDisplayableImage;		// ADS ImageWatch image
+	ipImageWork					: ITcVnImage;					// Image to work/debug with
+	ipImageWorkDisp				: ITcVnDisplayableImage;		// Debug with ADS ImageWatch
+	ipImageResult				: ITcVnImage;					// Result image to add drawings to
+	ipImageResultDisp			: ITcVnDisplayableImage;		// Displayable result image
+	
+	// colors
+	aColorRed					: TcVnVector4_LREAL := [255, 0, 0];
+	aColorGreen					: TcVnVector4_LREAL := [0, 255, 0];
+	aColorBlue					: TcVnVector4_LREAL := [0, 0, 255];
+	aColorBlack					: TcVnVector4_LREAL := [0, 0, 0];
+	aColorWhite					: TcVnVector4_LREAL := [255, 255, 255];
+	aColorYellow				: TcVnVector4_LREAL := [255, 255, 0];
+	
+	
+	// Watchdog
+	hrWD 						: HRESULT;
+	tWDStop						: DINT := 38_000;	(* Stop time in us *)
+	tRest 						: DINT;
+	nFunctionsMonitored			: ULINT;
+	nFractionProcessed 			: UDINT;
+	tDuration 					: DINT;
+	
+END_VAR
+</xhtml>
+                </InterfaceAsPlainText>
+              </data>
+            </addData>
+          </localVars>
+        </interface>
+        <body>
+          <ST>
+            <xhtml xmlns="http://www.w3.org/1999/xhtml">eControlState := fbControl.GetState();
+
+CASE eControlState OF
+
+	TCVN_CS_INITIAL, 			(* The camera controller is in the initial state and ready to establish the connection to the camera. *)
+	TCVN_CS_OPENING, 			(* The camera controller is establishing the connection to the camera. *)
+	TCVN_CS_OPENED, 			(* The connection to the camera has been established and the camera controller is ready to start the image acquisition. *)
+	TCVN_CS_STARTACQUISITION: 	(* The camera controller is starting the image acquisition. *)
+	
+		// start acquisition
+		hr := fbControl.StartAcquisition();
+	
+
+	TCVN_CS_ACQUIRING: 			(* The camera is sending images (either streaming or manually triggered, depending on the configuration). *)
+	
+		// get current image
+		hr := fbControl.GetCurrentImage(ipImage);
+		
+		IF SUCCEEDED(hr) AND ipImage &lt;&gt; 0 THEN
+			// Copy the Image into a Work-Image	
+			hr :=  F_VN_CopyImage(ipSrcImage:= ipImage, ipDestImage:= ipImageWork, hrPrev:= hr);
+			// Transform the Image into a Displayable Image which can be shown in the ADS ImageWatch (ipImage is not available anymore after transform)
+			hr := F_VN_TransformIntoDisplayableImage(ipImage, ipImageDisp, S_OK);
+			// debug ==&gt; Copy work Image to a displayable Work-Image (ipImageWork is still available after copy)
+			hr := F_VN_CopyIntoDisplayableImage(ipSrcImage:= ipImageWork, ipDestImage:= ipImageWorkDisp, hrPrev:= hr);
+			// Create the color Result Image to draw contours, texts, points etc on the result image
+			// -- adjust the eTransform parameter to your needs
+			// -- if ipImageWork is already a color image (3 channels) then use F_VN_CopyImage() instead
+			//hr := F_VN_ConvertColorSpace(ipSrcImage:= ipImageWork, ipDestImage:= ipImageResult, eTransform:= TCVN_CST_BAYER_BG_TO_RGB, hrPrev:= hr);
+			hr := F_VN_CopyImage(ipSrcImage:= ipImageWork, ipDestImage:= ipImageResult, hrPrev:= hr);
+	
+			
+			// *********************
+			// Add Vision Algorithms
+			// *********************
+
+			
+			
+			
+			
+
+			// Transform the Result Image into a Displayable image which can be shown in the ADS ImageWatch (ipImageResult is not available anymore after transform)
+			hr := F_VN_TransformIntoDisplayableImage(ipImageResult, ipImageResultDisp, S_OK);
+		
+		END_IF
+		
+		
+TCVN_CS_ERROR: 				(* The camera controller is in an error state (e.g. the connection to the camera was lost). *)
+	
+		// reset the camera FB
+		fbControl.Reset();
+END_CASE</xhtml>
+          </ST>
+        </body>
+        <addData>
+          <data name="http://www.3s-software.com/plcopenxml/interfaceasplaintext" handleUnknown="implementation">
+            <InterfaceAsPlainText>
+              <xhtml xmlns="http://www.w3.org/1999/xhtml">PROGRAM MAIN_VISION
+VAR
+
+	eControlState				: ETcVnCameraState;
+	fbControl					: FB_VN_FileSourceControl;		// File Source Control
+//	fbControl					: FB_VN_GevCameraControl;		// GigE Vision Camera Control
+//	fbControl					: FB_VN_SimpleCameraControl;	// File Source OR Camera Control 
+
+	hr							: HRESULT;						// Result Handle
+	
+	ipImage						: ITcVnImage;					// Original Image 
+	ipImageDisp					: ITcVnDisplayableImage;		// ADS ImageWatch image
+	ipImageWork					: ITcVnImage;					// Image to work/debug with
+	ipImageWorkDisp				: ITcVnDisplayableImage;		// Debug with ADS ImageWatch
+	ipImageResult				: ITcVnImage;					// Result image to add drawings to
+	ipImageResultDisp			: ITcVnDisplayableImage;		// Displayable result image
+	
+	// colors
+	aColorRed					: TcVnVector4_LREAL := [255, 0, 0];
+	aColorGreen					: TcVnVector4_LREAL := [0, 255, 0];
+	aColorBlue					: TcVnVector4_LREAL := [0, 0, 255];
+	aColorBlack					: TcVnVector4_LREAL := [0, 0, 0];
+	aColorWhite					: TcVnVector4_LREAL := [255, 255, 255];
+	aColorYellow				: TcVnVector4_LREAL := [255, 255, 0];
+	
+	
+	// Watchdog
+	hrWD 						: HRESULT;
+	tWDStop						: DINT := 38_000;	(* Stop time in us *)
+	tRest 						: DINT;
+	nFunctionsMonitored			: ULINT;
+	nFractionProcessed 			: UDINT;
+	tDuration 					: DINT;
+	
+END_VAR
+</xhtml>
+            </InterfaceAsPlainText>
+          </data>
+          <data name="http://www.3s-software.com/plcopenxml/objectid" handleUnknown="discard">
+            <ObjectId>2e9a7e0b-10d4-4db8-95d8-1d98fa199776</ObjectId>
+          </data>
+        </addData>
+      </pou>
+    </pous>
+  </types>
+  <instances>
+    <configurations />
+  </instances>
+  <addData>
+    <data name="http://www.3s-software.com/plcopenxml/projectstructure" handleUnknown="discard">
+      <ProjectStructure>
+        <Object Name="MAIN_VISION" ObjectId="2e9a7e0b-10d4-4db8-95d8-1d98fa199776" />
+      </ProjectStructure>
+    </data>
+  </addData>
+</project>

@@ -66,7 +66,8 @@ CASE eControlState OF
 			// Create the color Result Image to draw contours, texts, points etc on the result image
 			// -- adjust the eTransform parameter to your needs
 			// -- if ipImageWork is already a color image (3 channels) then use F_VN_CopyImage() instead
-			hr := F_VN_ConvertColorSpace(ipSrcImage:= ipImageWork, ipDestImage:= ipImageResult, eTransform:= TCVN_CST_BAYER_BG_TO_RGB, hrPrev:= hr);
+			//hr := F_VN_ConvertColorSpace(ipSrcImage:= ipImageWork, ipDestImage:= ipImageResult, eTransform:= TCVN_CST_BAYER_BG_TO_RGB, hrPrev:= hr);
+			hr := F_VN_CopyImage(ipSrcImage:= ipImageWork, ipDestImage:= ipImageResult, hrPrev:= hr);
 	
 			
 			// *********************
@@ -90,5 +91,11 @@ TCVN_CS_ERROR: 				(* The camera controller is in an error state (e.g. the conne
 		fbControl.Reset();
 END_CASE]]></ST>
     </Implementation>
+    <LineIds Name="MAIN_VISION">
+      <LineId Id="3" Count="27" />
+      <LineId Id="53" Count="1" />
+      <LineId Id="32" Count="20" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
   </POU>
 </TcPlcObject>
