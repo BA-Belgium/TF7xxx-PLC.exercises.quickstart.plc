@@ -24,6 +24,7 @@ Technologies used within the project:
 * 01_Basic: a very simple exercise setting up the foundation for a TwinCAT Vision project
 * 02_Analysis: example demonstrating the use of images and TwinCAT Vision algorithms    
 * 03_Hmi: example demonstrating the implementation of the TwinCAT Vision HMI control in TwinCAT HMI
+* 99_QuickStart: pdf containing the [quickstart](./99_QuickStart/TF7xxx-TwinCAT%20Vision%20Quick%20Start.pdf)
 * 00_Images: images used in the exercises (only one set)
 ![Alt text](00_Images/Image1.bmp)
 
