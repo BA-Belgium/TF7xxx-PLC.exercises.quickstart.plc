@@ -16,7 +16,7 @@ Technologies used within the project:
 * Picture library: See 00_Images folder in repository
 
 ## License 
-- [License](https://github.com/BA-Belgium/TF7xxx-PLC.exercises.quickstart.plc/blob/main/Legal/License.md)
+- [License](https://github.com/BA-Belgium/TF7xxx-PLC.exercises.quickstart.plc/blob/main/Legal/LICENSE.md)
 - [Additional License Information](https://github.com/BA-Belgium/TF7xxx-PLC.exercises.quickstart.plc/blob/main/Legal/AdditionalLicenseInformation.md)
 
 ## Contents
