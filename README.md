@@ -16,8 +16,8 @@ Technologies used within the project:
 * Picture library: See 00_Images folder in repository
 
 ## License 
-- [License](Legal/License.md)
-- [Additional License Information](Legal/AdditionalLicenseInformation.md)
+- [License](https://github.com/BA-Belgium/TF7xxx-PLC.exercises.quickstart.plc/blob/main/Legal/License.md)
+- [Additional License Information](https://github.com/BA-Belgium/TF7xxx-PLC.exercises.quickstart.plc/blob/main/Legal/AdditionalLicenseInformation.md)
 
 ## Contents
 4 folders with images, exercise materials (sub folder exercise) and worked out solutions (sub folder solution)
